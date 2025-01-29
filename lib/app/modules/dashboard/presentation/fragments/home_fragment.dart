@@ -3,6 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
 import 'package:jvec_test/app/modules/dashboard/presentation/controller/location_controller.dart';
 import 'package:jvec_test/app/modules/rides/presentation/controller/ride_flow_controller.dart';
+import 'package:jvec_test/app/modules/rides/presentation/pages/rating_page.dart';
 import 'package:jvec_test/core/framework/theme/spacings/spacings.dart';
 
 import '../portions/driver_detail_portion.dart';
@@ -69,8 +70,12 @@ class _HomeFragmentState extends State<HomeFragment>
         return DriverDetailPortion(
           rideState: RideStates.driverArrived,
           driver: rideFlowController.selectedDriver.value!,
-          onIHaveSeenDriver: () =>
-              rideFlowController.updateRide(RideStates.tripStarted),
+          onIHaveSeenDriver: () {
+            rideFlowController.updateRide(RideStates.idle);
+            Get.to(() => RatingPage(
+                  totalAmount: "300",
+                ));
+          },
         );
 
       default:
