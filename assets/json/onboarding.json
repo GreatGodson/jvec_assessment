@@ -1,0 +1,19 @@
+{
+  "message": [
+    {
+      "title": "Effortless Rides, Anytime, Anywhere!",
+      "message": "Welcome to our service! Get ready to experience seamless ride-hailing at your fingertips. Discover safe, fast, and reliable rides whenever you need them.",
+      "lottie": "assets/lotties/car.json"
+    },
+    {
+      "title": "Choose Your Destination with Ease!",
+      "message": "Select your pickup and drop-off locations effortlessly and watch as we connect you with nearby drivers for a smooth journey.",
+      "lottie": "assets/lotties/car3.json"
+    },
+    {
+      "title": "Sit Back and Enjoy the Journey!",
+      "message": "With real-time updates and trusted drivers, your journey is in good hands. Let’s get you to your destination safely and comfortably.",
+      "lottie": "assets/lotties/car2.json"
+    }
+  ]
+}
