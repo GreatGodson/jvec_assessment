@@ -25,17 +25,36 @@ class _HomeFragmentState extends State<HomeFragment>
   final locationController = Get.find<LocationController>();
   final rideFlowController = Get.find<RideFlowController>();
 
+  late TextEditingController _pickUpController;
+  late TextEditingController _destinationController;
+
   @override
   void initState() {
     super.initState();
     // _getCurrentLocation();
     _animationController = BottomSheet.createAnimationController(this)
       ..duration = const Duration(milliseconds: 500);
+    _destinationController = TextEditingController(
+      text: locationController.destination.value,
+    );
+    _pickUpController = TextEditingController(
+      text: locationController.locationName.value ?? "",
+    );
+
+    // Sync with destination value when it changes
+    ever(locationController.destination, (value) {
+      _destinationController.text = value!;
+    });
+    ever(locationController.locationName, (value) {
+      _pickUpController.text = value!;
+    });
   }
 
   @override
   void dispose() {
     _animationController.dispose();
+    _destinationController.dispose();
+    _pickUpController.dispose();
     super.dispose();
   }
 
@@ -49,6 +68,8 @@ class _HomeFragmentState extends State<HomeFragment>
     switch (rideFlowController.rideState.value) {
       case RideStates.idle:
         return IdleRideStatePortion(
+          destinationController: _destinationController,
+          pickupController: _pickUpController,
           locationController: locationController,
           onFindDriver: rideFlowController.searchRide,
         );
@@ -80,6 +101,8 @@ class _HomeFragmentState extends State<HomeFragment>
 
       default:
         return IdleRideStatePortion(
+          destinationController: _destinationController,
+          pickupController: _pickUpController,
           locationController: locationController,
           onFindDriver: () {
             rideFlowController.searchRide();

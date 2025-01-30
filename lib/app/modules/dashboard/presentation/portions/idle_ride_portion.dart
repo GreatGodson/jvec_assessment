@@ -11,10 +11,14 @@ class IdleRideStatePortion extends StatelessWidget {
     super.key,
     required this.locationController,
     required this.onFindDriver,
+    required this.destinationController,
+    required this.pickupController,
   });
 
   final LocationController locationController;
   final VoidCallback onFindDriver;
+  final TextEditingController pickupController;
+  final TextEditingController destinationController;
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -25,26 +29,28 @@ class IdleRideStatePortion extends StatelessWidget {
       child: Column(
         children: [
           TextFieldComponent(
+            validator: (val) {
+              return FormValidator.isEmpty(
+                pickupController.text,
+                customMessage: "Oops, Tell us your pick up location",
+              );
+            },
+            textEditingController: pickupController,
             header: "Pick Up",
-            textEditingController: TextEditingController(
-              text: locationController.locationName.value,
-            ),
             hint: "Current Location",
           ),
           SizedBox(
             height: Spacings.spacing10,
           ),
           TextFieldComponent(
+            textEditingController: destinationController,
             header: "Destination",
             validator: (val) {
               return FormValidator.isEmpty(
-                locationController.destination.value,
+                destinationController.text,
                 customMessage: "Oops, Tell us your destination",
               );
             },
-            textEditingController: TextEditingController(
-              text: locationController.destination.value,
-            ),
             hint: "Search destination",
           ),
           SizedBox(
