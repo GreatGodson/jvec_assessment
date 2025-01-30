@@ -2,18 +2,51 @@
   "drivers": [
     {
       "name": "David Johnson",
-      "type": "Toyota Camry",
-      "rating": "4.8"
+      "type": "Toyota Camry · Red",
+      "rating": "4.8",
+      "price": "N4,500",
+      "phone": "09010029938",
+      "plate": "FKJ-ST011"
     },
     {
       "name": "Moses John",
-      "type": "Lexus RX",
-      "rating": "4.95"
+      "type": "Lexus RX  · Gray",
+      "rating": "4.95",
+      "price": "N9,000",
+      "phone": "09012245537",
+      "plate": "LMK-TY44P"
     },
     {
       "name": "Philip Samson",
-      "type": "Toyota Camry",
-      "rating": "4.4"
+      "type": "Toyota Camry  · Blue",
+      "rating": "4.45",
+      "price": "N6,200",
+      "phone": "08112039938",
+      "plate": "KFF-12QSO"
+    },
+    {
+      "name": "Paul Francis",
+      "type": "Honda Civic · Black ",
+      "rating": "4.0",
+      "price": "N5,000",
+      "phone": "08023740984",
+      "plate": "LAG-WE4T"
+    },
+    {
+      "name": "Peter James",
+      "type": "Hyundai Sonata  · Blue",
+      "rating": "4.9",
+      "price": "N9,000",
+      "phone": "08103949930",
+      "plate": "ABJ-98QW"
+    },
+    {
+      "name": "Samuel Amos",
+      "type": "Toyota Camry  · Green",
+      "rating": "5.0",
+      "price": "N10,200",
+      "phone": "09023374483",
+      "plate": "ABK-21KFS"
     }
   ]
 }

@@ -50,9 +50,9 @@ class FormValidator {
     }
   }
 
-  static isEmpty(String? value) {
-    if (value!.isEmpty) {
-      return 'Required field';
+  static isEmpty(String? value, {String? customMessage}) {
+    if (value == null || value.isEmpty) {
+      return customMessage ?? 'Required field';
     }
   }
 

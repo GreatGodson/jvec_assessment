@@ -92,6 +92,8 @@ class _HomeFragmentState extends State<HomeFragment>
   Widget build(BuildContext context) {
     return Obx(() {
       final locationState = locationController.locationName.value;
+      final destinationName = locationController.destination.value;
+
       final rideState = rideFlowController.rideState.value;
       final rideStateLoading = rideFlowController.isLoading.value;
 
@@ -108,16 +110,21 @@ class _HomeFragmentState extends State<HomeFragment>
                         mapController: _mapController,
                         options: MapOptions(
                           onMapReady: () {
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              _mapController.move(
-                                  locationController.currentLocation.value!,
-                                  15); // Zoom level 15
-                            });
+                            WidgetsBinding.instance.addPostFrameCallback(
+                              (_) {
+                                _mapController.move(
+                                    locationController.currentLocation.value!,
+                                    15); // Zoom level 15
+                              },
+                            );
                             // Ensure the map is centered when it is ready
                             // _mapController.moveAndRotate(_initialLocation, 12, 180);
                           },
                           // center: _currentLocation,
                           // zoom: 15.0,
+                          onTap: (pos, latLng) {
+                            locationController.getDestinationName(latLng);
+                          },
                         ),
                         children: [
                           TileLayer(
@@ -133,7 +140,7 @@ class _HomeFragmentState extends State<HomeFragment>
                                 width: 50,
                                 height: 50,
                                 child: Icon(
-                                  Icons.location_pin,
+                                  Icons.location_history,
                                   color: Colors.red,
                                   size: 40,
                                 ),
