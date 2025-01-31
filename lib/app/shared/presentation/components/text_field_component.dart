@@ -27,6 +27,7 @@ class TextFieldComponent extends StatefulWidget {
   final String? initialValue;
   final EdgeInsets? contentPadding;
   final VoidCallback? onTap;
+  final bool enabled;
 
   const TextFieldComponent({
     super.key,
@@ -53,6 +54,7 @@ class TextFieldComponent extends StatefulWidget {
     this.initialValue,
     this.contentPadding,
     this.onTap,
+    this.enabled = true,
   });
 
   @override
@@ -96,6 +98,7 @@ class _TextFieldComponentState extends State<TextFieldComponent> {
           },
         ),
         TextFormField(
+          enabled: widget.enabled,
           onTap: widget.onTap,
           initialValue: widget.initialValue,
           autovalidateMode: AutovalidateMode.onUserInteraction,

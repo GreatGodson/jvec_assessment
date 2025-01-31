@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:jvec_test/app/modules/dashboard/presentation/fragments/profile_fragment.dart';
 
 import '../controller/dashboard_nav_controller.dart';
 import '../fragments/home_fragment.dart';
@@ -22,6 +23,7 @@ class DashboardPage extends StatelessWidget {
             children: [
               HomeFragment(),
               RideHistoryFragment(),
+              ProfileFragment(),
             ],
           );
         },
@@ -39,6 +41,10 @@ class DashboardPage extends StatelessWidget {
               BottomNavigationBarItem(
                 icon: Icon(Icons.car_rental),
                 label: 'Rides',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: 'Profile',
               ),
             ],
           );
