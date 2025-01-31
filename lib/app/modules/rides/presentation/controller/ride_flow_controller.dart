@@ -1,7 +1,10 @@
 import 'dart:math';
 
 import 'package:get/get.dart';
+import 'package:jvec_test/app/modules/dashboard/presentation/controller/location_controller.dart';
+import 'package:jvec_test/app/modules/drivers/presentation/controller/ride_history_controller.dart';
 
+import '../../../../shared/helpers/date_converter.dart';
 import '../../../drivers/data/get_drivers_response_model.dart';
 import '../../../drivers/domain/repository/interface/driver_repository_interface.dart';
 
@@ -14,6 +17,8 @@ class RideFlowController extends GetxController {
   final Rxn<DriversResponseModel> _driverResponse = Rxn<DriversResponseModel>();
   Rxn<Driver> selectedDriver = Rxn<Driver>(null);
   Rxn<String> rideStatus = Rxn<String>("");
+  final _locationController = Get.find<LocationController>();
+  final _rideHistoryController = Get.find<RideHistoryController>();
 
   void updateRide(RideStates newState, {int? waitTime}) async {
     isLoading.value = true;
@@ -48,6 +53,31 @@ class RideFlowController extends GetxController {
   void cancelRide() async {
     rideStatus.value = RideCompletionStatus.canceled.name;
     rideState.value = RideStates.idle;
+    _locationController.showDestinationMarker.value = false;
+    _locationController.destinationLatLng.value = null;
+    _addToHistory();
+  }
+
+  void _addToHistory() {
+    _rideHistoryController.addToHistory(
+      Driver(
+        dropOff: _locationController.destination.value,
+        pickup: _locationController.locationName.value,
+        plateNo: "",
+        phone: "",
+        price: "",
+        name: "Canceled Ride",
+        type: "",
+        rating: "",
+        comments: "",
+        status: RideCompletionStatus.canceled.name,
+        date: convertDateFormat(
+          DateTime.now().toString(),
+        ),
+      ),
+    );
+    _locationController.showDestinationMarker.value = false;
+    _locationController.destinationLatLng.value = null;
   }
 }
 

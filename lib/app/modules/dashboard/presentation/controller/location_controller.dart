@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 
 class LocationController extends GetxController {
@@ -13,6 +16,10 @@ class LocationController extends GetxController {
   Rxn<LatLng?> currentLocation = Rxn<LatLng?>(null);
   Rxn<String?> locationName = Rxn<String?>(null);
   Rxn<String?> destination = Rxn<String?>(null);
+  Rxn<LatLng?> destinationLatLng = Rxn<LatLng?>(null);
+  Rxn<bool> showDestinationMarker = Rxn<bool>(false);
+
+  Rxn<List<LatLng>> polyLines = Rxn<List<LatLng>>([]);
 
   Future<void> _getCurrentLocation() async {
     bool serviceEnabled;
@@ -73,5 +80,28 @@ class LocationController extends GetxController {
   getDestinationName(LatLng destinationGeo) async {
     destination.value = await _getLocationName(
         destinationGeo.latitude, destinationGeo.longitude);
+    showDestinationMarker.value = true;
+    destinationLatLng.value = destinationGeo;
+    fetchRoute();
+  }
+
+  Future<void> fetchRoute() async {
+    final String url =
+        "http://router.project-osrm.org/route/v1/driving/${currentLocation.value?.longitude},${currentLocation.value?.latitude};${destinationLatLng.value?.longitude},${destinationLatLng.value?.latitude}?overview=full&geometries=geojson";
+
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final List coordinates = data['routes'][0]['geometry']['coordinates'];
+
+      polyLines.value = coordinates
+          .map(
+            (coord) => LatLng(
+              coord[1],
+              coord[0],
+            ),
+          ) // Convert to LatLng
+          .toList();
+    }
   }
 }

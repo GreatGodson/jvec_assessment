@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
+import 'package:jvec_test/app/modules/dashboard/presentation/controller/location_controller.dart';
 import 'package:jvec_test/app/modules/drivers/data/get_drivers_response_model.dart';
 import 'package:jvec_test/app/modules/rides/presentation/controller/ride_flow_controller.dart';
 import 'package:jvec_test/app/shared/helpers/date_converter.dart';
@@ -37,6 +38,7 @@ class RatingPage extends StatelessWidget {
 
   final _rideHistoryController = Get.find<RideHistoryController>();
   final _rideController = Get.find<RideFlowController>();
+  final _locationController = Get.find<LocationController>();
 
   void addToHistory() {
     _rideHistoryController.addToHistory(
@@ -56,6 +58,8 @@ class RatingPage extends StatelessWidget {
         ),
       ),
     );
+    _locationController.showDestinationMarker.value = false;
+    _locationController.destinationLatLng.value = null;
   }
 
   @override

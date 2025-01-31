@@ -136,7 +136,7 @@ class _HomeFragmentState extends State<HomeFragment>
                       children: [
                         Padding(
                           padding: EdgeInsets.only(
-                            bottom: MediaQuery.of(context).size.height / 3.5,
+                            bottom: MediaQuery.of(context).size.height / 4.6,
                           ),
                           child: FlutterMap(
                             mapController: _mapController,
@@ -179,8 +179,33 @@ class _HomeFragmentState extends State<HomeFragment>
                                       size: 40,
                                     ),
                                   ),
+                                  if (_locationController
+                                      .showDestinationMarker.value!)
+                                    Marker(
+                                      point: _locationController
+                                          .destinationLatLng.value!,
+                                      width: 50,
+                                      height: 50,
+                                      child: Icon(
+                                        Icons.house,
+                                        color: Colors.orange,
+                                        size: 40,
+                                      ),
+                                    ),
                                 ],
                               ),
+                              if (_locationController.destinationLatLng.value !=
+                                  null)
+                                PolylineLayer(
+                                  polylines: [
+                                    Polyline(
+                                      points:
+                                          _locationController.polyLines.value!,
+                                      color: Colors.blue,
+                                      strokeWidth: 4,
+                                    ),
+                                  ],
+                                )
                             ],
                           ),
                         ),

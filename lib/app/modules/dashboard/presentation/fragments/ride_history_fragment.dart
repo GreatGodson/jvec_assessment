@@ -145,7 +145,9 @@ class RideHistoryFragment extends StatelessWidget {
                                           SizedBox(
                                             width: Spacings.spacing6,
                                           ),
-                                          Text(ride.pickup ?? ""),
+                                          Expanded(
+                                            child: Text(ride.pickup ?? ""),
+                                          ),
                                         ],
                                       ),
                                       Container(
@@ -169,7 +171,8 @@ class RideHistoryFragment extends StatelessWidget {
                                           SizedBox(
                                             width: Spacings.spacing6,
                                           ),
-                                          Text(ride.dropOff ?? ""),
+                                          Expanded(
+                                              child: Text(ride.dropOff ?? "")),
                                         ],
                                       ),
                                     ],
