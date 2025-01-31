@@ -54,8 +54,8 @@ A Flutter-based mobile application providing ride hailing service in a simulated
 
 - **Framework**: Flutter (≥v3.27.0)
 - **Language**: Dart (≥3.0.0)
-- **State Management**: GetX
-- **Dependency Injection**: GetX
+- **State Management**: Get
+- **Dependency Injection**: Get
 
 ### Architecture
 
