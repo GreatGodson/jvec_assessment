@@ -13,16 +13,19 @@ class RideHistoryController extends GetxController {
 
   void addToHistory(Driver newRide) async {
     await _driverService.addRideToHistory(newRide);
-    // Get.snackbar("Error", "Failed to add to history $e");
-    // }
   }
 
   void fetchDrivers() async {
     try {
+      isLoading.value = true;
+      await Future.delayed(Duration(seconds: 3));
+
       final response = await _driverService.getRideHistory();
       rideHistory.value = response.reversed.toList();
     } catch (e) {
       Get.snackbar("Error", "Failed to load history $e");
+    } finally {
+      isLoading.value = false;
     }
   }
 }

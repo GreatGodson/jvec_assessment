@@ -18,14 +18,12 @@ class LocationController extends GetxController {
     bool serviceEnabled;
     LocationPermission permission;
 
-    // Check if location services are enabled
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       await Geolocator.openLocationSettings();
       return Future.error('Location services are disabled.');
     }
 
-    // Check location permissions
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -40,16 +38,11 @@ class LocationController extends GetxController {
       );
     }
 
-    // Get the current location
     final position = await Geolocator.getCurrentPosition();
     currentLocation.value = LatLng(position.latitude, position.longitude);
     locationName.value =
         await _getLocationName(position.latitude, position.longitude);
 
-    // Move the map to the current location
-    // _mapController.move(_currentLocation!, 15.0);
-
-    // Listen to location changes
     Geolocator.getPositionStream().listen((Position position) async {
       currentLocation.value = LatLng(position.latitude, position.longitude);
 
@@ -60,24 +53,21 @@ class LocationController extends GetxController {
   }
 
   Future<String> _getLocationName(double latitude, double longitude) async {
-    // Use the geocoding package to get placemarks
-    String response = "";
-    List<Placemark> placemarks =
-        await placemarkFromCoordinates(latitude, longitude);
-    if (placemarks.isNotEmpty) {
-      final placemark = placemarks.first;
-      // Combine the name details (e.g., street, city, country)
+    try {
+      String response = "";
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(latitude, longitude);
+      if (placemarks.isNotEmpty) {
+        final placemark = placemarks.first;
 
-      response =
-          "${placemark.street}, ${placemark.locality}, ${placemark.country}";
+        response =
+            "${placemark.street}, ${placemark.locality}, ${placemark.country}";
+      }
+
+      return response;
+    } catch (e) {
+      return "Error: Unable to fetch location name";
     }
-
-    return response;
-    // } catch (e) {
-    //   setState(() {
-    //     locationName = "Error: Unable to fetch location name";
-    //   });
-    // }
   }
 
   getDestinationName(LatLng destinationGeo) async {

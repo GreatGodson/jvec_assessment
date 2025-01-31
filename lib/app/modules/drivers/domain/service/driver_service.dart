@@ -18,31 +18,26 @@ class DriverService implements DriverServiceInterface {
   @override
   Future<List<Driver>> getRideHistory() async {
     final local = AppPreferences.rideList;
-    final decoded = await jsonDecode(local);
-    final map = DriversResponseModel.fromJson(Map.from(decoded));
-    return map.drivers ?? [];
-  }
 
-  // @override
-  // Future<List<Driver>> addRideToHistory(Driver model) async {
-  //   final local = AppPreferences.rideList;
-  //   final decoded = await jsonDecode(local);
-  //   final map = DriversResponseModel.fromJson(Map.from(decoded));
-  //   final List<Driver> history = map.drivers ?? [];
-  //   history.add(model);
-  //   final encode = jsonEncode(DriversResponseModel(drivers: history));
-  //   AppPreferences.storeRideList(encode);
-  //   return history;
-  // }
+    if (local.isEmpty) {
+      return [];
+    }
+
+    try {
+      final decoded = jsonDecode(local);
+      final map =
+          DriversResponseModel.fromJson(Map<String, dynamic>.from(decoded));
+      return map.drivers ?? [];
+    } catch (e) {
+      return [];
+    }
+  }
 
   @override
   Future<List<Driver>> addRideToHistory(Driver model) async {
     final local = AppPreferences.rideList;
 
-    // Ensure it's not null or empty before decoding
-    final decoded = (local.isEmpty)
-        ? {"drivers": []} // Provide default empty JSON structure
-        : jsonDecode(local);
+    final decoded = (local.isEmpty) ? {"drivers": []} : jsonDecode(local);
 
     final map = DriversResponseModel.fromJson(Map.from(decoded));
     final List<Driver> history = map.drivers ?? [];

@@ -24,23 +24,24 @@ class DashboardPage extends StatelessWidget {
           ],
         );
       }),
-      bottomNavigationBar: Obx(() {
-        // Reactively update the BottomNavigationBar
-        return BottomNavigationBar(
-          currentIndex: dashboardController.selectedIndex.value,
-          onTap: (index) => dashboardController.updateIndex(index),
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.car_rental),
-              label: 'Rides',
-            ),
-          ],
-        );
-      }),
+      bottomNavigationBar: Obx(
+        () {
+          return BottomNavigationBar(
+            currentIndex: dashboardController.selectedIndex.value,
+            onTap: (index) => dashboardController.updateIndex(index),
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.car_rental),
+                label: 'Rides',
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }

@@ -31,7 +31,6 @@ class _HomeFragmentState extends State<HomeFragment>
   @override
   void initState() {
     super.initState();
-    // _getCurrentLocation();
     _animationController = BottomSheet.createAnimationController(this)
       ..duration = const Duration(milliseconds: 500);
     _destinationController = TextEditingController(
@@ -40,16 +39,6 @@ class _HomeFragmentState extends State<HomeFragment>
     _pickUpController = TextEditingController(
       text: locationController.locationName.value ?? "",
     );
-
-    // _destinationController.addListener(() {
-    //   locationController.destination.value =
-    //       _destinationController.text; // Update RxString when text changes
-    // });
-    // _pickUpController.addListener(() {
-    //   locationController.locationName.value =
-    //       _destinationController.text; // Update RxString when text changes
-    // });
-    // Sync with destination value when it changes
     ever(locationController.destination, (value) {
       _destinationController.text = value!;
     });
@@ -144,48 +133,54 @@ class _HomeFragmentState extends State<HomeFragment>
                     alignment: Alignment.bottomCenter,
                     clipBehavior: Clip.none,
                     children: [
-                      FlutterMap(
-                        mapController: _mapController,
-                        options: MapOptions(
-                          onMapReady: () {
-                            WidgetsBinding.instance.addPostFrameCallback(
-                              (_) {
-                                _mapController.move(
-                                    locationController.currentLocation.value!,
-                                    15); // Zoom level 15
-                              },
-                            );
-                            // Ensure the map is centered when it is ready
-                            // _mapController.moveAndRotate(_initialLocation, 12, 180);
-                          },
-                          // center: _currentLocation,
-                          // zoom: 15.0,
-                          onTap: (pos, latLng) {
-                            locationController.getDestinationName(latLng);
-                          },
+                      Padding(
+                        padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).size.height / 3.5,
                         ),
-                        children: [
-                          TileLayer(
-                            urlTemplate:
-                                'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                            userAgentPackageName: 'com.jvec.app',
-                          ),
-                          MarkerLayer(
-                            markers: [
-                              Marker(
-                                point:
+                        child: FlutterMap(
+                          mapController: _mapController,
+                          options: MapOptions(
+                            onMapReady: () {
+                              WidgetsBinding.instance.addPostFrameCallback(
+                                (_) {
+                                  _mapController.move(
                                     locationController.currentLocation.value!,
-                                width: 50,
-                                height: 50,
-                                child: Icon(
-                                  Icons.location_history,
-                                  color: Colors.red,
-                                  size: 40,
-                                ),
-                              ),
-                            ],
+                                    16,
+                                  );
+                                },
+                              );
+                              // Ensure the map is centered when it is ready
+                              // _mapController.moveAndRotate(_initialLocation, 12, 180);
+                            },
+                            // center: _currentLocation,
+                            // zoom: 15.0,
+                            onTap: (pos, latLng) {
+                              locationController.getDestinationName(latLng);
+                            },
                           ),
-                        ],
+                          children: [
+                            TileLayer(
+                              urlTemplate:
+                                  'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                              userAgentPackageName: 'com.jvec.app',
+                            ),
+                            MarkerLayer(
+                              markers: [
+                                Marker(
+                                  point:
+                                      locationController.currentLocation.value!,
+                                  width: 50,
+                                  height: 50,
+                                  child: Icon(
+                                    Icons.location_history,
+                                    color: Colors.red,
+                                    size: 40,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                       Positioned(
                         bottom: 0,
