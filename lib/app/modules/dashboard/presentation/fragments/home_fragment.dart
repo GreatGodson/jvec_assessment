@@ -41,6 +41,14 @@ class _HomeFragmentState extends State<HomeFragment>
       text: locationController.locationName.value ?? "",
     );
 
+    // _destinationController.addListener(() {
+    //   locationController.destination.value =
+    //       _destinationController.text; // Update RxString when text changes
+    // });
+    // _pickUpController.addListener(() {
+    //   locationController.locationName.value =
+    //       _destinationController.text; // Update RxString when text changes
+    // });
     // Sync with destination value when it changes
     ever(locationController.destination, (value) {
       _destinationController.text = value!;
@@ -92,10 +100,17 @@ class _HomeFragmentState extends State<HomeFragment>
           rideState: RideStates.driverArrived,
           driver: rideFlowController.selectedDriver.value!,
           onIHaveSeenDriver: () {
+            rideFlowController.rideStatus.value =
+                RideCompletionStatus.completed.name;
+
             rideFlowController.updateRide(RideStates.idle);
-            Get.to(() => RatingPage(
-                  totalAmount: "300",
-                ));
+            Get.to(
+              () => RatingPage(
+                pickup: _pickUpController.text,
+                dropOff: _destinationController.text,
+                totalAmount: rideFlowController.selectedDriver.value!.price!,
+              ),
+            );
           },
         );
 

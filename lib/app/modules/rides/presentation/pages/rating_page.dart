@@ -1,17 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
+import 'package:jvec_test/app/modules/dashboard/presentation/controller/location_controller.dart';
+import 'package:jvec_test/app/modules/drivers/data/get_drivers_response_model.dart';
+import 'package:jvec_test/app/modules/rides/presentation/controller/ride_flow_controller.dart';
+import 'package:jvec_test/app/shared/helpers/date_converter.dart';
 import 'package:jvec_test/app/shared/presentation/components/button_component.dart';
 import 'package:jvec_test/app/shared/presentation/components/text_field_component.dart';
 import 'package:jvec_test/core/framework/theme/spacings/spacings.dart';
+
+import '../../../drivers/presentation/controller/ride_history_controller.dart';
 
 class RatingPage extends StatelessWidget {
   RatingPage({
     super.key,
     required this.totalAmount,
+    required this.dropOff,
+    required this.pickup,
   });
 
   final String totalAmount;
+  final String dropOff;
+  final String pickup;
 
   final rateUnselect = const Icon(
     Icons.star_outline,
@@ -28,6 +38,30 @@ class RatingPage extends StatelessWidget {
   String starRating = '';
   String ratingContent = '';
 
+  final rideHistoryController = Get.find<RideHistoryController>();
+  final locationController = Get.find<LocationController>();
+  final rideController = Get.find<RideFlowController>();
+
+  void addToHistory() {
+    rideHistoryController.addToHistory(
+      Driver(
+        dropOff: dropOff,
+        pickup: pickup,
+        plateNo: rideController.selectedDriver.value?.plateNo,
+        phone: rideController.selectedDriver.value?.phone,
+        price: rideController.selectedDriver.value?.price,
+        name: rideController.selectedDriver.value?.name,
+        type: rideController.selectedDriver.value?.type,
+        rating: starRating,
+        comments: ratingContent,
+        status: rideController.rideStatus.value,
+        date: convertDateFormat(
+          DateTime.now().toString(),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,6 +70,8 @@ class RatingPage extends StatelessWidget {
         elevation: 0.0,
         leading: IconButton(
             onPressed: () {
+              addToHistory();
+
               Get.back();
             },
             icon: Icon(Icons.close)),
@@ -67,7 +103,7 @@ class RatingPage extends StatelessWidget {
                         height: Spacings.spacing50,
                       ),
                       Text(
-                        '₦ 500.00',
+                        "$totalAmount.00",
                         style: TextStyle(
                           fontSize: Spacings.spacing30,
                           fontWeight: FontWeight.w500,
@@ -129,6 +165,7 @@ class RatingPage extends StatelessWidget {
                 expanded: true,
                 text: "Submit",
                 onPressed: () {
+                  addToHistory();
                   Get.back();
                 },
               ),

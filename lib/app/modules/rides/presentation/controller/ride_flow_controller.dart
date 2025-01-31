@@ -13,6 +13,7 @@ class RideFlowController extends GetxController {
   Rxn<bool> isLoading = Rxn<bool>(false);
   Rxn<DriversResponseModel> driverResponse = Rxn<DriversResponseModel>();
   Rxn<Driver> selectedDriver = Rxn<Driver>(null);
+  Rxn<String> rideStatus = Rxn<String>("");
 
   void updateRide(RideStates newState, {int? waitTime}) async {
     isLoading.value = true;
@@ -35,6 +36,7 @@ class RideFlowController extends GetxController {
       selectedDriver.value = driverList?[random.nextInt(driverList.length)];
       isLoading.value = false;
       rideState.value = RideStates.driverFound;
+      rideStatus.value = RideCompletionStatus.ongoing.name;
     } else {
       await Future.delayed(Duration(seconds: 15));
       isLoading.value = false;
@@ -44,6 +46,7 @@ class RideFlowController extends GetxController {
   }
 
   void cancelRide() async {
+    rideStatus.value = RideCompletionStatus.canceled.name;
     rideState.value = RideStates.idle;
   }
 }
@@ -56,6 +59,8 @@ enum RideStates {
   tripStarted,
   completed,
 }
+
+enum RideCompletionStatus { ongoing, completed, canceled }
 
 extension RideStateExtension on RideStates {
   bool get isIdle => this == RideStates.idle;

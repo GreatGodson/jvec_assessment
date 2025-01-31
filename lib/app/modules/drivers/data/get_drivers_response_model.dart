@@ -27,6 +27,11 @@ class Driver {
   final String? price;
   final String? phone;
   final String? plateNo;
+  final String? pickup;
+  final String? dropOff;
+  final String? comments;
+  final String? status;
+  final String? date;
 
   Driver({
     this.name,
@@ -35,6 +40,11 @@ class Driver {
     this.price,
     this.phone,
     this.plateNo,
+    this.pickup,
+    this.dropOff,
+    this.comments,
+    this.status,
+    this.date,
   });
 
   factory Driver.fromJson(Map<String, dynamic> json) => Driver(
@@ -44,6 +54,11 @@ class Driver {
         price: json["price"],
         phone: json["phone"],
         plateNo: json["plate"],
+        pickup: json["pickup"],
+        dropOff: json["dropoff"],
+        comments: json["comments"],
+        status: json["status"],
+        date: json["date"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -53,5 +68,10 @@ class Driver {
         "price": price,
         "phone": phone,
         "plate": plateNo,
+        "pickup": pickup,
+        "dropoff": dropOff,
+        "comments": comments,
+        "status": status,
+        "date": date,
       };
 }

@@ -1,10 +1,208 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:jvec_test/app/modules/drivers/presentation/controller/ride_history_controller.dart';
+import 'package:jvec_test/app/modules/rides/presentation/controller/ride_flow_controller.dart';
+import 'package:jvec_test/core/framework/theme/spacings/spacings.dart';
 
 class RideHistoryFragment extends StatelessWidget {
-  const RideHistoryFragment({super.key});
+  RideHistoryFragment({super.key});
+
+  final rideHistoryController = Get.find<RideHistoryController>()
+    ..fetchDrivers();
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Obx(() {
+      return Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: Spacings.spacing14,
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              rideHistoryController.rideHistory.value!.isNotEmpty
+                  ? SafeArea(
+                      child: Column(
+                        children: rideHistoryController.rideHistory.value!.map(
+                          (ride) {
+                            final split = ride.name?.split(" ");
+                            final firstname = split?[0];
+                            final lastname = split?[1];
+                            return Container(
+                              margin: EdgeInsets.only(
+                                bottom: Spacings.spacing24,
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: Spacings.spacing10,
+                                vertical: Spacings.spacing16,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.blue.withOpacity(0.05),
+                                borderRadius:
+                                    BorderRadius.circular(Spacings.spacing20),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(ride.date ?? DateTime.now().toString()),
+                                  SizedBox(
+                                    height: Spacings.spacing6,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          CircleAvatar(
+                                            child: Text(
+                                              "${firstname?[0]}${lastname?[0]}",
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: Spacings.spacing10,
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(ride.name!),
+                                              Text(ride.phone!),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(ride.price!),
+                                              ride.rating!.isNotEmpty
+                                                  ? Row(
+                                                      children: [
+                                                        Text(ride.rating!),
+                                                        Icon(Icons.star),
+                                                      ],
+                                                    )
+                                                  : Text("No rating"),
+                                              Text(
+                                                ride.status ?? "canceled",
+                                                style: TextStyle(
+                                                    color: ride.status == null
+                                                        ? Colors.red
+                                                        : ride.status!
+                                                                    .toLowerCase() ==
+                                                                RideCompletionStatus
+                                                                    .canceled
+                                                                    .name
+                                                                    .toLowerCase()
+                                                            ? Colors.red
+                                                            : Colors.green),
+                                              )
+                                            ],
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: Spacings.spacing30,
+                                  ),
+                                  Row(
+                                    children: [
+                                      CircleAvatar(
+                                        backgroundColor: Colors.red,
+                                        radius: 10,
+                                        child: CircleAvatar(
+                                          radius: 8,
+                                          backgroundColor: Colors.white,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: Spacings.spacing6,
+                                      ),
+                                      Text(ride.pickup ?? ""),
+                                    ],
+                                  ),
+
+                                  Container(
+                                    margin: EdgeInsets.only(
+                                      left: Spacings.spacing8,
+                                    ),
+                                    height: Spacings.spacing20,
+                                    width: 2,
+                                    color: Colors.grey,
+                                  ),
+
+                                  // SizedBox(
+                                  //   height: Spacings.spacing6,
+                                  // ),
+
+                                  Row(
+                                    children: [
+                                      CircleAvatar(
+                                        backgroundColor: Colors.green,
+                                        radius: 10,
+                                        child: CircleAvatar(
+                                          radius: 8,
+                                          backgroundColor: Colors.white,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: Spacings.spacing6,
+                                      ),
+                                      Text(ride.dropOff ?? ""),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ).toList(),
+                      ),
+                    )
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height / 2,
+                        ),
+                        Icon(
+                          Icons.ac_unit_outlined,
+                          size: Spacings.spacing40,
+                        ),
+                        SizedBox(
+                          height: Spacings.spacing24,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "You have no rides",
+                              style: TextStyle(
+                                fontSize: Spacings.spacing16,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: Spacings.spacing6,
+                        ),
+                        Text(
+                          "Book your first ride and see your history appear here",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: Spacings.spacing14,
+                          ),
+                        ),
+                      ],
+                    )
+            ],
+          ),
+        ),
+      );
+    });
   }
 }

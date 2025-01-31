@@ -2,4 +2,8 @@ import 'package:jvec_test/app/modules/drivers/data/get_drivers_response_model.da
 
 abstract interface class DriverServiceInterface {
   Future<DriversResponseModel> getDrivers();
+
+  Future<List<Driver>> getRideHistory();
+
+  Future<List<Driver>> addRideToHistory(Driver model);
 }

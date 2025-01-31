@@ -6,6 +6,7 @@ import 'package:jvec_test/app/modules/dashboard/presentation/controller/location
 import 'package:jvec_test/app/modules/drivers/domain/repository/driver_repository.dart';
 import 'package:jvec_test/app/modules/drivers/domain/repository/interface/driver_repository_interface.dart';
 import 'package:jvec_test/app/modules/drivers/domain/service/driver_service.dart';
+import 'package:jvec_test/app/modules/drivers/presentation/controller/ride_history_controller.dart';
 import 'package:jvec_test/app/modules/onboarding/domain/repository/interface/onboarding_repository_interface.dart';
 import 'package:jvec_test/app/modules/onboarding/domain/service/onboarding_service.dart';
 import 'package:jvec_test/app/modules/onboarding/presentation/controllers/onboarding_content_controller.dart';
@@ -55,6 +56,10 @@ class AppBindings extends Bindings {
     );
     Get.lazyPut<RideFlowController>(
       () => RideFlowController(),
+      fenix: true,
+    );
+    Get.lazyPut<RideHistoryController>(
+      () => RideHistoryController(),
       fenix: true,
     );
   }

@@ -13,4 +13,14 @@ class DriverRepository implements DriverRepositoryInterface {
   Future<DriversResponseModel> getDrivers() {
     return driverService.getDrivers();
   }
+
+  @override
+  Future<List<Driver>> addRideToHistory(Driver model) {
+    return driverService.addRideToHistory(model);
+  }
+
+  @override
+  Future<List<Driver>> getRideHistory() {
+    return driverService.getRideHistory();
+  }
 }
