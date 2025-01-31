@@ -20,12 +20,12 @@ class IdleRideStatePortion extends StatelessWidget {
   final TextEditingController pickupController;
   final TextEditingController destinationController;
 
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return Form(
-      key: formKey,
+      key: _formKey,
       child: Column(
         children: [
           TextFieldComponent(
@@ -60,7 +60,7 @@ class IdleRideStatePortion extends StatelessWidget {
             expanded: true,
             text: "Find Driver",
             onPressed: () {
-              if (formKey.currentState!.validate()) {
+              if (_formKey.currentState!.validate()) {
                 onFindDriver();
               }
             },

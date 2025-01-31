@@ -17,6 +17,7 @@ class LoginController extends GetxController {
   RxBool isLoading = false.obs;
   Rxn<LoginRequestDto> loginData = Rxn<LoginRequestDto>();
   Rxn<LoginResponseModel> loginResponse = Rxn<LoginResponseModel>();
+  final Rxn<bool> _passwordVisible = Rxn<bool>(false);
 
   @override
   void onInit() {
@@ -28,6 +29,15 @@ class LoginController extends GetxController {
     final data = loginData.value;
     return FormValidator.isEmailValid(data?.email.trim()) == null &&
         FormValidator.isEmpty(data?.password.trim()) == null;
+  }
+
+  bool get isPasswordVisible {
+    final data = _passwordVisible.value;
+    return data!;
+  }
+
+  void togglePasswordVisibility() {
+    _passwordVisible.value = !_passwordVisible.value!;
   }
 
   void updateSignUpData({
@@ -52,7 +62,7 @@ class LoginController extends GetxController {
         return;
       }
       final logInUser = LoginRequestDto(
-        email: loginData.value!.email,
+        email: loginData.value!.email.toLowerCase(),
         password: loginData.value!.password,
       );
       final decode = jsonDecode(AppPreferences.signupCredentials);

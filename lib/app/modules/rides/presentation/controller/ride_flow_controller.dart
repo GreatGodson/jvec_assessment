@@ -11,7 +11,7 @@ class RideFlowController extends GetxController {
   RideFlowController() : _driverService = Get.find<DriverRepositoryInterface>();
   Rxn<RideStates> rideState = Rxn<RideStates>(RideStates.idle);
   Rxn<bool> isLoading = Rxn<bool>(false);
-  Rxn<DriversResponseModel> driverResponse = Rxn<DriversResponseModel>();
+  final Rxn<DriversResponseModel> _driverResponse = Rxn<DriversResponseModel>();
   Rxn<Driver> selectedDriver = Rxn<Driver>(null);
   Rxn<String> rideStatus = Rxn<String>("");
 
@@ -31,7 +31,7 @@ class RideFlowController extends GetxController {
     if (decision) {
       await Future.delayed(Duration(seconds: 6));
       final drivers = await _driverService.getDrivers();
-      driverResponse.value = drivers;
+      _driverResponse.value = drivers;
       final driverList = drivers.drivers;
       selectedDriver.value = driverList?[random.nextInt(driverList.length)];
       isLoading.value = false;

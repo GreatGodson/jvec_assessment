@@ -12,7 +12,9 @@ class SignUpController extends GetxController {
   SignUpController() : _authService = Get.find<AuthRepositoryInterface>();
   RxBool isLoading = false.obs;
   Rxn<SignupRequestDto> signupData = Rxn<SignupRequestDto>();
-  Rxn<SignupResponseModel> signupResponse = Rxn<SignupResponseModel>();
+  final Rxn<SignupResponseModel> _signupResponse = Rxn<SignupResponseModel>();
+  final Rxn<bool> _passwordVisible = Rxn<bool>(false);
+  final Rxn<bool> _confirmPasswordVisible = Rxn<bool>(false);
 
   @override
   void onInit() {
@@ -31,6 +33,24 @@ class SignUpController extends GetxController {
               data!.confirmPassword.trim(),
             ) ==
             null;
+  }
+
+  bool get isPasswordVisible {
+    final data = _passwordVisible.value;
+    return data!;
+  }
+
+  bool get isConfirmPasswordVisible {
+    final data = _confirmPasswordVisible.value;
+    return data!;
+  }
+
+  void togglePasswordVisibility() {
+    _passwordVisible.value = !_passwordVisible.value!;
+  }
+
+  void togglePasswordConfirmVisibility() {
+    _confirmPasswordVisible.value = !_confirmPasswordVisible.value!;
   }
 
   void updateSignUpData({
@@ -58,12 +78,12 @@ class SignUpController extends GetxController {
       isLoading.value = true;
       final model = SignupRequestDto(
         name: signupData.value!.name,
-        email: signupData.value!.email,
+        email: signupData.value!.email.toLowerCase(),
         phoneNumber: signupData.value!.phoneNumber,
         password: signupData.value!.password,
       );
       final response = await _authService.signup(model);
-      signupResponse.value = response;
+      _signupResponse.value = response;
       Get.offAll(
         () => DashboardPage(),
       );

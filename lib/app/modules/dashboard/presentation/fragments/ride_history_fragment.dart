@@ -35,12 +35,12 @@ class RideHistoryFragment extends StatelessWidget {
                   )
                 : Column(
                     children: [
-                      rideHistoryController.rideHistory.value!.isNotEmpty
-                          ? SafeArea(
-                              child: Column(
-                                  children: List.generate(
-                                      rideHistoryController
-                                          .rideHistory.value!.length, (index) {
+                      if (rideHistoryController.rideHistory.value!.isNotEmpty)
+                        SafeArea(
+                          child: Column(
+                            children: List.generate(
+                              rideHistoryController.rideHistory.value!.length,
+                              (index) {
                                 final ride = rideHistoryController
                                     .rideHistory.value?[index];
                                 final split = ride?.name!.split(" ");
@@ -57,7 +57,8 @@ class RideHistoryFragment extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     color: Colors.blue.withOpacity(0.05),
                                     borderRadius: BorderRadius.circular(
-                                        Spacings.spacing20),
+                                      Spacings.spacing20,
+                                    ),
                                   ),
                                   child: Column(
                                     crossAxisAlignment:
@@ -87,7 +88,7 @@ class RideHistoryFragment extends StatelessWidget {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(ride!.name!),
-                                                  Text(ride!.phone!),
+                                                  Text(ride.phone!),
                                                 ],
                                               ),
                                             ],
@@ -185,45 +186,47 @@ class RideHistoryFragment extends StatelessWidget {
                                           const Duration(milliseconds: 500),
                                       delay: ((index * 200).ms),
                                     );
-                              })),
-                            )
-                          : Column(
+                              },
+                            ),
+                          ),
+                        )
+                      else
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height / 2,
+                            ),
+                            Icon(
+                              Icons.ac_unit_outlined,
+                              size: Spacings.spacing40,
+                            ),
+                            SizedBox(
+                              height: Spacings.spacing24,
+                            ),
+                            Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height / 2,
-                                ),
-                                Icon(
-                                  Icons.ac_unit_outlined,
-                                  size: Spacings.spacing40,
-                                ),
-                                SizedBox(
-                                  height: Spacings.spacing24,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "You have no rides",
-                                      style: TextStyle(
-                                        fontSize: Spacings.spacing16,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: Spacings.spacing6,
-                                ),
                                 Text(
-                                  "Book your first ride and see your history appear here",
-                                  textAlign: TextAlign.center,
+                                  "You have no rides",
                                   style: TextStyle(
-                                    fontSize: Spacings.spacing14,
+                                    fontSize: Spacings.spacing16,
                                   ),
                                 ),
                               ],
-                            )
+                            ),
+                            SizedBox(
+                              height: Spacings.spacing6,
+                            ),
+                            Text(
+                              "Book your first ride and see your history appear here",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: Spacings.spacing14,
+                              ),
+                            ),
+                          ],
+                        )
                     ],
                   ),
           ),

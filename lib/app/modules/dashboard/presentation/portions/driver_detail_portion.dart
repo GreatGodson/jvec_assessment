@@ -22,7 +22,7 @@ class DriverDetailPortion extends StatelessWidget {
   final Driver driver;
   final RideStates rideState;
 
-  final locationController = Get.find<LocationController>();
+  final _locationController = Get.find<LocationController>();
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class DriverDetailPortion extends StatelessWidget {
     final firstname = split?[0];
     final lastname = split?[1];
     final String googleMapsUrl =
-        "https://www.google.com/maps/search/?api=1&query=${locationController.currentLocation.value?.latitude},${locationController.currentLocation.value?.longitude}";
+        "https://www.google.com/maps/search/?api=1&query=${_locationController.currentLocation.value?.latitude},${_locationController.currentLocation.value?.longitude}";
 
     return Column(
       children: [

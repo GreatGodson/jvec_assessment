@@ -22,8 +22,8 @@ class _HomeFragmentState extends State<HomeFragment>
     with SingleTickerProviderStateMixin {
   final MapController _mapController = MapController();
   late AnimationController _animationController;
-  final locationController = Get.find<LocationController>();
-  final rideFlowController = Get.find<RideFlowController>();
+  final _locationController = Get.find<LocationController>();
+  final _rideFlowController = Get.find<RideFlowController>();
 
   late TextEditingController _pickUpController;
   late TextEditingController _destinationController;
@@ -34,15 +34,15 @@ class _HomeFragmentState extends State<HomeFragment>
     _animationController = BottomSheet.createAnimationController(this)
       ..duration = const Duration(milliseconds: 500);
     _destinationController = TextEditingController(
-      text: locationController.destination.value,
+      text: _locationController.destination.value,
     );
     _pickUpController = TextEditingController(
-      text: locationController.locationName.value ?? "",
+      text: _locationController.locationName.value ?? "",
     );
-    ever(locationController.destination, (value) {
+    ever(_locationController.destination, (value) {
       _destinationController.text = value!;
     });
-    ever(locationController.locationName, (value) {
+    ever(_locationController.locationName, (value) {
       _pickUpController.text = value!;
     });
   }
@@ -56,48 +56,48 @@ class _HomeFragmentState extends State<HomeFragment>
   }
 
   Widget _buildRideStatePortion() {
-    if (rideFlowController.isLoading.value == true) {
+    if (_rideFlowController.isLoading.value == true) {
       return LoadingPortion(
-        rideStates: rideFlowController.rideState.value!,
+        rideStates: _rideFlowController.rideState.value!,
       );
     }
 
-    switch (rideFlowController.rideState.value) {
+    switch (_rideFlowController.rideState.value) {
       case RideStates.idle:
         return IdleRideStatePortion(
           destinationController: _destinationController,
           pickupController: _pickUpController,
-          locationController: locationController,
-          onFindDriver: rideFlowController.searchRide,
+          locationController: _locationController,
+          onFindDriver: _rideFlowController.searchRide,
         );
 
       case RideStates.driverFound:
         return DriverDetailPortion(
           rideState: RideStates.driverFound,
-          driver: rideFlowController.selectedDriver.value!,
+          driver: _rideFlowController.selectedDriver.value!,
           onIHaveSeenDriver: () =>
-              rideFlowController.updateRide(RideStates.driverArrived),
+              _rideFlowController.updateRide(RideStates.driverArrived),
         );
 
       case RideStates.driverPending:
         return DriverNotFoundPortion(
-          onCancel: rideFlowController.cancelRide,
-          onRetry: rideFlowController.searchRide,
+          onCancel: _rideFlowController.cancelRide,
+          onRetry: _rideFlowController.searchRide,
         );
       case RideStates.driverArrived:
         return DriverDetailPortion(
           rideState: RideStates.driverArrived,
-          driver: rideFlowController.selectedDriver.value!,
+          driver: _rideFlowController.selectedDriver.value!,
           onIHaveSeenDriver: () {
-            rideFlowController.rideStatus.value =
+            _rideFlowController.rideStatus.value =
                 RideCompletionStatus.completed.name;
 
-            rideFlowController.updateRide(RideStates.idle);
+            _rideFlowController.updateRide(RideStates.idle);
             Get.to(
               () => RatingPage(
                 pickup: _pickUpController.text,
                 dropOff: _destinationController.text,
-                totalAmount: rideFlowController.selectedDriver.value!.price!,
+                totalAmount: _rideFlowController.selectedDriver.value!.price!,
               ),
             );
           },
@@ -107,9 +107,9 @@ class _HomeFragmentState extends State<HomeFragment>
         return IdleRideStatePortion(
           destinationController: _destinationController,
           pickupController: _pickUpController,
-          locationController: locationController,
+          locationController: _locationController,
           onFindDriver: () {
-            rideFlowController.searchRide();
+            _rideFlowController.searchRide();
           },
         );
     }
@@ -117,101 +117,101 @@ class _HomeFragmentState extends State<HomeFragment>
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      final locationState = locationController.locationName.value;
-      final destinationName = locationController.destination.value;
+    return Obx(
+      () {
+        final locationState = _locationController.locationName.value;
+        final destinationName = _locationController.destination.value;
 
-      final rideState = rideFlowController.rideState.value;
-      final rideStateLoading = rideFlowController.isLoading.value;
+        final rideState = _rideFlowController.rideState.value;
+        final rideStateLoading = _rideFlowController.isLoading.value;
 
-      return Column(
-        children: [
-          locationController.currentLocation.value == null
-              ? const Center(child: CircularProgressIndicator())
-              : Flexible(
-                  child: Stack(
-                    alignment: Alignment.bottomCenter,
-                    clipBehavior: Clip.none,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(
-                          bottom: MediaQuery.of(context).size.height / 3.5,
+        return Column(
+          children: [
+            _locationController.currentLocation.value == null
+                ? const Center(child: CircularProgressIndicator())
+                : Flexible(
+                    child: Stack(
+                      alignment: Alignment.bottomCenter,
+                      clipBehavior: Clip.none,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).size.height / 3.5,
+                          ),
+                          child: FlutterMap(
+                            mapController: _mapController,
+                            options: MapOptions(
+                              onMapReady: () {
+                                WidgetsBinding.instance.addPostFrameCallback(
+                                  (_) {
+                                    _mapController.move(
+                                      _locationController
+                                          .currentLocation.value!,
+                                      16,
+                                    );
+                                  },
+                                );
+                                // Ensure the map is centered when it is ready
+                                // _mapController.moveAndRotate(_initialLocation, 12, 180);
+                              },
+                              // center: _currentLocation,
+                              // zoom: 15.0,
+                              onTap: (pos, latLng) {
+                                _locationController.getDestinationName(latLng);
+                              },
+                            ),
+                            children: [
+                              TileLayer(
+                                urlTemplate:
+                                    'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                userAgentPackageName: 'com.jvec.app',
+                              ),
+                              MarkerLayer(
+                                markers: [
+                                  Marker(
+                                    point: _locationController
+                                        .currentLocation.value!,
+                                    width: 50,
+                                    height: 50,
+                                    child: Icon(
+                                      Icons.location_history,
+                                      color: Colors.red,
+                                      size: 40,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                        child: FlutterMap(
-                          mapController: _mapController,
-                          options: MapOptions(
-                            onMapReady: () {
-                              WidgetsBinding.instance.addPostFrameCallback(
-                                (_) {
-                                  _mapController.move(
-                                    locationController.currentLocation.value!,
-                                    16,
-                                  );
-                                },
+                        Positioned(
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          child: BottomSheet(
+                            animationController: _animationController,
+                            showDragHandle: true,
+                            enableDrag: true,
+                            onClosing: () {},
+                            // onDragStart: (val) {},
+                            // onDragEnd: (value, {isClosing = false}) {},
+                            builder: (BuildContext context) {
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: Spacings.spacing24,
+                                  horizontal: Spacings.spacing24,
+                                ),
+                                child: _buildRideStatePortion(),
                               );
-                              // Ensure the map is centered when it is ready
-                              // _mapController.moveAndRotate(_initialLocation, 12, 180);
-                            },
-                            // center: _currentLocation,
-                            // zoom: 15.0,
-                            onTap: (pos, latLng) {
-                              locationController.getDestinationName(latLng);
                             },
                           ),
-                          children: [
-                            TileLayer(
-                              urlTemplate:
-                                  'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                              userAgentPackageName: 'com.jvec.app',
-                            ),
-                            MarkerLayer(
-                              markers: [
-                                Marker(
-                                  point:
-                                      locationController.currentLocation.value!,
-                                  width: 50,
-                                  height: 50,
-                                  child: Icon(
-                                    Icons.location_history,
-                                    color: Colors.red,
-                                    size: 40,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
                         ),
-                      ),
-                      Positioned(
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        child: BottomSheet(
-                          animationController: _animationController,
-                          showDragHandle: true,
-                          enableDrag: true,
-                          onClosing: () {},
-                          // onDragStart: (val) {},
-                          // onDragEnd: (value, {isClosing = false}) {},
-                          builder: (BuildContext context) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: Spacings.spacing24,
-                                horizontal: Spacings.spacing24,
-                              ),
-                              child: _buildRideStatePortion(),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-        ],
-      );
-    });
+          ],
+        );
+      },
+    );
   }
 }
-
-/// aditional features
-//call , chat, ride share details, star rating

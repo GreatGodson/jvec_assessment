@@ -14,14 +14,14 @@ import 'login_page.dart';
 class SignupPage extends StatelessWidget {
   SignupPage({super.key});
 
-  final signupController = Get.find<SignUpController>();
+  final _signupController = Get.find<SignUpController>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Obx(
         () {
-          final state = signupController.signupData.value;
+          final state = _signupController.signupData.value;
           return SafeArea(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: Spacings.spacing24),
@@ -46,13 +46,13 @@ class SignupPage extends StatelessWidget {
                                 TextFieldComponent(
                                   validator: (val) {
                                     return FormValidator.isEmpty(
-                                      signupController.signupData.value?.name
+                                      _signupController.signupData.value?.name
                                           .toString(),
                                     );
                                   },
                                   hint: "Full Name",
                                   onChanged: (name) {
-                                    signupController.updateSignUpData(
+                                    _signupController.updateSignUpData(
                                         name: name);
                                   },
                                 ),
@@ -65,14 +65,14 @@ class SignupPage extends StatelessWidget {
                                 TextFieldComponent(
                                   validator: (val) {
                                     return FormValidator.isEmailValid(
-                                      signupController.signupData.value?.email
+                                      _signupController.signupData.value?.email
                                           .trim(),
                                     );
                                   },
                                   keyboardType: TextInputType.emailAddress,
                                   hint: "Email Address",
                                   onChanged: (email) {
-                                    signupController.updateSignUpData(
+                                    _signupController.updateSignUpData(
                                         email: email.trim());
                                   },
                                 ),
@@ -89,7 +89,7 @@ class SignupPage extends StatelessWidget {
                                   ],
                                   validator: (val) {
                                     return FormValidator.isPhoneNumberValid(
-                                      signupController
+                                      _signupController
                                           .signupData.value?.phoneNumber
                                           .trim(),
                                     );
@@ -97,7 +97,7 @@ class SignupPage extends StatelessWidget {
                                   keyboardType: TextInputType.phone,
                                   hint: "Enter phone number",
                                   onChanged: (number) {
-                                    signupController.updateSignUpData(
+                                    _signupController.updateSignUpData(
                                         phoneNumber: number.trim());
                                   },
                                 ),
@@ -108,16 +108,46 @@ class SignupPage extends StatelessWidget {
                               ),
                               _animatedTextField(
                                 TextFieldComponent(
+                                  suffix: Builder(
+                                    builder: (context) {
+                                      if (_signupController.isPasswordVisible) {
+                                        return IconButton(
+                                          onPressed: () {
+                                            _signupController
+                                                .togglePasswordVisibility();
+                                          },
+                                          icon: const Icon(
+                                            Icons.visibility_off,
+                                            size: Spacings.spacing20,
+                                            color: Color(0xff808080),
+                                          ),
+                                        );
+                                      } else {
+                                        return IconButton(
+                                            onPressed: () {
+                                              _signupController
+                                                  .togglePasswordVisibility();
+                                            },
+                                            icon: const Icon(
+                                              Icons.visibility_outlined,
+                                              size: Spacings.spacing20,
+                                              color: Color(0xff808080),
+                                            ));
+                                      }
+                                    },
+                                  ),
+                                  obscureText:
+                                      !_signupController.isPasswordVisible,
                                   validator: (val) {
                                     return FormValidator.isPasswordValid(
-                                      signupController
+                                      _signupController
                                           .signupData.value?.password
                                           .trim(),
                                     );
                                   },
                                   hint: "Enter Password",
                                   onChanged: (password) {
-                                    signupController.updateSignUpData(
+                                    _signupController.updateSignUpData(
                                         password: password.trim());
                                   },
                                 ),
@@ -128,19 +158,50 @@ class SignupPage extends StatelessWidget {
                               ),
                               _animatedTextField(
                                 TextFieldComponent(
+                                  suffix: Builder(
+                                    builder: (context) {
+                                      if (_signupController
+                                          .isConfirmPasswordVisible) {
+                                        return IconButton(
+                                          onPressed: () {
+                                            _signupController
+                                                .togglePasswordConfirmVisibility();
+                                          },
+                                          icon: const Icon(
+                                            Icons.visibility_off,
+                                            size: Spacings.spacing20,
+                                            color: Color(0xff808080),
+                                          ),
+                                        );
+                                      } else {
+                                        return IconButton(
+                                            onPressed: () {
+                                              _signupController
+                                                  .togglePasswordConfirmVisibility();
+                                            },
+                                            icon: const Icon(
+                                              Icons.visibility_outlined,
+                                              size: Spacings.spacing20,
+                                              color: Color(0xff808080),
+                                            ));
+                                      }
+                                    },
+                                  ),
+                                  obscureText: !_signupController
+                                      .isConfirmPasswordVisible,
                                   validator: (val) {
                                     return FormValidator.passwordMatch(
-                                      signupController
+                                      _signupController
                                           .signupData.value?.password
                                           .trim(),
-                                      signupController
+                                      _signupController
                                           .signupData.value!.confirmPassword
                                           .trim(),
                                     );
                                   },
                                   hint: "Confirm Password",
                                   onChanged: (password) {
-                                    signupController.updateSignUpData(
+                                    _signupController.updateSignUpData(
                                         confirmPassword: password.trim());
                                   },
                                 ),
@@ -174,11 +235,11 @@ class SignupPage extends StatelessWidget {
                   ),
                   const SizedBox(height: Spacings.spacing10),
                   ButtonComponent(
-                    isLoading: signupController.isLoading.value,
-                    validator: () => signupController.isFormValid,
+                    isLoading: _signupController.isLoading.value,
+                    validator: () => _signupController.isFormValid,
                     text: "Continue",
                     onPressed: () {
-                      signupController.signUp();
+                      _signupController.signUp();
                     },
                     expanded: true,
                   )

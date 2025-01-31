@@ -14,10 +14,10 @@ class OnboardingContentController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    loadOnboarding();
+    _loadOnboarding();
   }
 
-  Future<void> loadOnboarding() async {
+  Future<void> _loadOnboarding() async {
     try {
       isLoading.value = true;
       final dto = await _onboardingService.getOnBoardingContent();

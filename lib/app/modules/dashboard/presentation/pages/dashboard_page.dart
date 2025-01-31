@@ -8,27 +8,29 @@ import '../fragments/ride_history_fragment.dart';
 class DashboardPage extends StatelessWidget {
   DashboardPage({super.key});
 
-  final DashboardNavController dashboardController =
+  final DashboardNavController _dashboardController =
       Get.put(DashboardNavController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Obx(() {
-        return IndexedStack(
-          index: dashboardController.selectedIndex.value,
-          children: [
-            HomeFragment(),
-            RideHistoryFragment(),
-          ],
-        );
-      }),
+      body: Obx(
+        () {
+          return IndexedStack(
+            index: _dashboardController.selectedIndex.value,
+            children: [
+              HomeFragment(),
+              RideHistoryFragment(),
+            ],
+          );
+        },
+      ),
       bottomNavigationBar: Obx(
         () {
           return BottomNavigationBar(
-            currentIndex: dashboardController.selectedIndex.value,
-            onTap: (index) => dashboardController.updateIndex(index),
+            currentIndex: _dashboardController.selectedIndex.value,
+            onTap: (index) => _dashboardController.updateIndex(index),
             items: const [
               BottomNavigationBarItem(
                 icon: Icon(Icons.home),

@@ -18,8 +18,8 @@ class OnboardingPage extends StatefulWidget {
 }
 
 class _OnboardingPageState extends State<OnboardingPage> {
-  final OnboardingController controller = Get.put(OnboardingController());
-  final onboardingController = Get.find<OnboardingContentController>();
+  final OnboardingController _controller = Get.put(OnboardingController());
+  final _onboardingController = Get.find<OnboardingContentController>();
 
   @override
   Widget build(BuildContext context) {
@@ -27,27 +27,27 @@ class _OnboardingPageState extends State<OnboardingPage> {
       body: SafeArea(
         child: Obx(
           () {
-            if (onboardingController.isLoading.value) {
+            if (_onboardingController.isLoading.value) {
               return const Center(
                 child: CircularProgressIndicator(),
               );
             }
 
-            if (onboardingController.onboardingData.value == null) {
+            if (_onboardingController.onboardingData.value == null) {
               return const Center(
                 child: Text('Failed to load onboarding data'),
               );
             }
-            final data = onboardingController.onboardingData.value!;
+            final data = _onboardingController.onboardingData.value!;
 
             final message = data.message;
             return Column(
               children: [
                 Expanded(
                   child: PageView.builder(
-                    controller: controller.pageController,
+                    controller: _controller.pageController,
                     onPageChanged: (index) {
-                      controller.pageViewIndex.value = index;
+                      _controller.pageViewIndex.value = index;
                     },
                     itemCount: message.length,
                     itemBuilder: (context, index) {
@@ -107,7 +107,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     children: [
                       Expanded(
                         child: Obx(() => PageViewIndicatorsComponent(
-                              index: controller.pageViewIndex.value,
+                              index: _controller.pageViewIndex.value,
                               count: 3,
                             )),
                       ),
@@ -117,14 +117,14 @@ class _OnboardingPageState extends State<OnboardingPage> {
                           () => ButtonComponent(
                             color: Colors.purple,
                             verticalPadding: Spacings.spacing18,
-                            text: controller.pageViewIndex.value < 2
+                            text: _controller.pageViewIndex.value < 2
                                 ? "Skip"
                                 : "Get Started",
                             onPressed: () {
-                              if (controller.pageViewIndex.value == 2) {
+                              if (_controller.pageViewIndex.value == 2) {
                                 Get.off(() => SignupPage());
                               } else {
-                                controller.pageController.nextPage(
+                                _controller.pageController.nextPage(
                                   duration: const Duration(milliseconds: 500),
                                   curve: Curves.easeInOut,
                                 );

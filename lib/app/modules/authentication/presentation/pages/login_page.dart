@@ -13,13 +13,13 @@ import '../../../../../core/framework/helpers/form_validator.dart';
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
 
-  final loginController = Get.find<LoginController>();
+  final _loginController = Get.find<LoginController>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Obx(() {
-        final state = loginController.loginData.value;
+        final state = _loginController.loginData.value;
         return SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: Spacings.spacing24),
@@ -42,13 +42,13 @@ class LoginPage extends StatelessWidget {
                           TextFieldComponent(
                             validator: (val) {
                               return FormValidator.isEmailValid(
-                                loginController.loginData.value?.email.trim(),
+                                _loginController.loginData.value?.email.trim(),
                               );
                             },
                             keyboardType: TextInputType.emailAddress,
                             hint: "Email Address",
                             onChanged: (email) {
-                              loginController.updateSignUpData(
+                              _loginController.updateSignUpData(
                                   email: email.trim());
                             },
                           ),
@@ -57,15 +57,44 @@ class LoginPage extends StatelessWidget {
                         const SizedBox(height: Spacings.spacing16),
                         _animatedTextField(
                           TextFieldComponent(
+                            suffix: Builder(
+                              builder: (context) {
+                                if (_loginController.isPasswordVisible) {
+                                  return IconButton(
+                                    onPressed: () {
+                                      _loginController
+                                          .togglePasswordVisibility();
+                                    },
+                                    icon: const Icon(
+                                      Icons.visibility_off,
+                                      size: Spacings.spacing20,
+                                      color: Color(0xff808080),
+                                    ),
+                                  );
+                                } else {
+                                  return IconButton(
+                                      onPressed: () {
+                                        _loginController
+                                            .togglePasswordVisibility();
+                                      },
+                                      icon: const Icon(
+                                        Icons.visibility_outlined,
+                                        size: Spacings.spacing20,
+                                        color: Color(0xff808080),
+                                      ));
+                                }
+                              },
+                            ),
+                            obscureText: !_loginController.isPasswordVisible,
                             validator: (val) {
                               return FormValidator.isEmpty(
-                                loginController.loginData.value?.password
+                                _loginController.loginData.value?.password
                                     .trim(),
                               );
                             },
                             hint: "Enter Password",
                             onChanged: (password) {
-                              loginController.updateSignUpData(
+                              _loginController.updateSignUpData(
                                   password: password.trim());
                             },
                           ),
@@ -96,11 +125,11 @@ class LoginPage extends StatelessWidget {
                 ),
                 const SizedBox(height: Spacings.spacing10),
                 ButtonComponent(
-                  isLoading: loginController.isLoading.value,
-                  validator: () => loginController.isFormValid,
+                  isLoading: _loginController.isLoading.value,
+                  validator: () => _loginController.isFormValid,
                   text: "Log In",
                   onPressed: () {
-                    loginController.login();
+                    _loginController.login();
                   },
                   expanded: true,
                 )

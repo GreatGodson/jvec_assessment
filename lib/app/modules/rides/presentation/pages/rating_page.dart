@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
-import 'package:jvec_test/app/modules/dashboard/presentation/controller/location_controller.dart';
 import 'package:jvec_test/app/modules/drivers/data/get_drivers_response_model.dart';
 import 'package:jvec_test/app/modules/rides/presentation/controller/ride_flow_controller.dart';
 import 'package:jvec_test/app/shared/helpers/date_converter.dart';
@@ -23,38 +22,35 @@ class RatingPage extends StatelessWidget {
   final String dropOff;
   final String pickup;
 
-  final rateUnselect = const Icon(
+  final _rateUnselect = const Icon(
     Icons.star_outline,
     color: Colors.grey,
   );
 
-  final rateSelect = const Icon(
+  final _rateSelect = const Icon(
     Icons.star_outlined,
     color: Colors.yellow,
   );
 
-  bool isRating = false;
+  String _starRating = '';
+  final String _ratingContent = '';
 
-  String starRating = '';
-  String ratingContent = '';
-
-  final rideHistoryController = Get.find<RideHistoryController>();
-  final locationController = Get.find<LocationController>();
-  final rideController = Get.find<RideFlowController>();
+  final _rideHistoryController = Get.find<RideHistoryController>();
+  final _rideController = Get.find<RideFlowController>();
 
   void addToHistory() {
-    rideHistoryController.addToHistory(
+    _rideHistoryController.addToHistory(
       Driver(
         dropOff: dropOff,
         pickup: pickup,
-        plateNo: rideController.selectedDriver.value?.plateNo,
-        phone: rideController.selectedDriver.value?.phone,
-        price: rideController.selectedDriver.value?.price,
-        name: rideController.selectedDriver.value?.name,
-        type: rideController.selectedDriver.value?.type,
-        rating: starRating,
-        comments: ratingContent,
-        status: rideController.rideStatus.value,
+        plateNo: _rideController.selectedDriver.value?.plateNo,
+        phone: _rideController.selectedDriver.value?.phone,
+        price: _rideController.selectedDriver.value?.price,
+        name: _rideController.selectedDriver.value?.name,
+        type: _rideController.selectedDriver.value?.type,
+        rating: _starRating,
+        comments: _ratingContent,
+        status: _rideController.rideStatus.value,
         date: convertDateFormat(
           DateTime.now().toString(),
         ),
@@ -116,20 +112,20 @@ class RatingPage extends StatelessWidget {
                         itemBuilder: (context, index) {
                           switch (index) {
                             case 0:
-                              return rateSelect;
+                              return _rateSelect;
                             case 1:
-                              return rateSelect;
+                              return _rateSelect;
                             case 2:
-                              return rateSelect;
+                              return _rateSelect;
                             case 3:
-                              return rateSelect;
+                              return _rateSelect;
                             case 4:
-                              return rateSelect;
+                              return _rateSelect;
                           }
                           return const SizedBox.shrink();
                         },
                         onRatingUpdate: (rating) {
-                          starRating = rating.toString();
+                          _starRating = rating.toString();
                           // print(starRating);
                         },
                       ),
